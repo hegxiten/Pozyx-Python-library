@@ -177,6 +177,43 @@ if __name__ == "__main__":
                DeviceCoordinates(0xA002, 1, Coordinates(10490, 0, 2790)),
                DeviceCoordinates(0xA003, 1, Coordinates(-405, 6000, 2790)),
                DeviceCoordinates(0xA004, 1, Coordinates(10490, 6500, 2790))]
+    ################################
+    # Warren St. Anchors
+    # [[    0.     0.  3188.]      0x6852  0
+    #  [ 9824. -2579.  3108.]      0x6849  1
+    #  [19529.  -288.  2951.]      0x6833  2
+    #  [30440. -2393.  3332.]      0x6822  3
+    #  [41410.     0.  3363.]]     0x6818  4
+    # anchors = [
+    #     DeviceCoordinates(0x6852, 1, Coordinates(    0,     0,  3188)),
+    #     DeviceCoordinates(0x6849, 1, Coordinates( 9824, -2579,  3108)),
+    #     DeviceCoordinates(0x6833, 1, Coordinates(19529,  -288,  2951)),
+    #     DeviceCoordinates(0x6822, 1, Coordinates(30440, -2393,  3332)),
+    #     DeviceCoordinates(0x6818, 1, Coordinates(41410,     0,  3363)),
+    # ]
+    ################################
+
+    ################################
+    # Penn Anchors
+    # [[-9501.  3518.  3057.]      0x680A  0
+    #  [  291.  2702.  3127.]      0x6843  1
+    #  [ 3992.  2516.  3116.]      0x685A  2
+    #  [12639.  2408.  3134.]      0x6859  3
+    #  [21600.  3407.  3222.]      0x6870  4
+    #  [21492.     0.  3375.]      0x6872  5
+    #  [    0.     0.  3120.]      0x6839  6
+    #  [-9677.    80.  3099.]]     0x683D  7
+    # anchors = [
+    #     DeviceCoordinates(0x680A, 1, Coordinates(-9501,  3518,  3057)),
+    #     DeviceCoordinates(0x6843, 1, Coordinates(  291,  2702,  3127)),
+    #     DeviceCoordinates(0x685A, 1, Coordinates( 3992,  2516,  3116)),
+    #     DeviceCoordinates(0x6859, 1, Coordinates(12639,  2408,  3134)),
+    #     DeviceCoordinates(0x6870, 1, Coordinates(21600,  3407,  3222)),
+    #     DeviceCoordinates(0x6872, 1, Coordinates(21492,     0,  3375)),
+    #     DeviceCoordinates(0x6839, 1, Coordinates(    0,     0,  3120)),
+    #     DeviceCoordinates(0x683D, 1, Coordinates(-9677,    80,  3099)),
+    # ]
+    ################################
 
     # positioning algorithm to use, other is PozyxConstants.POSITIONING_ALGORITHM_TRACKING
     algorithm = PozyxConstants.POSITIONING_ALGORITHM_UWB_ONLY
