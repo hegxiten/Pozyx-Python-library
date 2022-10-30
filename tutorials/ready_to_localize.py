@@ -9,6 +9,8 @@ of the Pozyx device both locally and remotely. Follow the steps to correctly set
 parameters and upload this sketch. Watch the coordinates change as you move your device around!
 """
 from time import sleep
+from datetime import datetime
+import sys
 
 from pypozyx import (POZYX_POS_ALG_UWB_ONLY, POZYX_3D, Coordinates, POZYX_SUCCESS, PozyxConstants, version,
                      DeviceCoordinates, PozyxSerial, get_first_pozyx_serial_port, SingleRegister, DeviceList, PozyxRegisters)
@@ -59,6 +61,7 @@ class ReadyToLocalize(object):
             self.printPublishPosition(position)
         else:
             self.printPublishErrorCode("positioning")
+        return position, status
 
     def printPublishPosition(self, position):
         """Prints the Pozyx's position and possibly sends it as a OSC packet"""
@@ -67,6 +70,7 @@ class ReadyToLocalize(object):
             network_id = 0
         print("POS ID {}, x(mm): {pos.x} y(mm): {pos.y} z(mm): {pos.z}".format(
             "0x%0.4x" % network_id, pos=position))
+        
         if self.osc_udp_client is not None:
             self.osc_udp_client.send_message(
                 "/position", [network_id, int(position.x), int(position.y), int(position.z)])
@@ -203,16 +207,16 @@ if __name__ == "__main__":
     #  [21492.     0.  3375.]      0x6872  5
     #  [    0.     0.  3120.]      0x6839  6
     #  [-9677.    80.  3099.]]     0x683D  7
-    # anchors = [
-    #     DeviceCoordinates(0x680A, 1, Coordinates(-9501,  3518,  3057)),
-    #     DeviceCoordinates(0x6843, 1, Coordinates(  291,  2702,  3127)),
-    #     DeviceCoordinates(0x685A, 1, Coordinates( 3992,  2516,  3116)),
-    #     DeviceCoordinates(0x6859, 1, Coordinates(12639,  2408,  3134)),
-    #     DeviceCoordinates(0x6870, 1, Coordinates(21600,  3407,  3222)),
-    #     DeviceCoordinates(0x6872, 1, Coordinates(21492,     0,  3375)),
-    #     DeviceCoordinates(0x6839, 1, Coordinates(    0,     0,  3120)),
-    #     DeviceCoordinates(0x683D, 1, Coordinates(-9677,    80,  3099)),
-    # ]
+    anchors = [
+        DeviceCoordinates(0x680A, 1, Coordinates(-9501,  3518,  3057)),
+        DeviceCoordinates(0x6843, 1, Coordinates(  291,  2702,  3127)),
+        DeviceCoordinates(0x685A, 1, Coordinates( 3992,  2516,  3116)),
+        DeviceCoordinates(0x6859, 1, Coordinates(12639,  2408,  3134)),
+        DeviceCoordinates(0x6870, 1, Coordinates(21600,  3407,  3222)),
+        DeviceCoordinates(0x6872, 1, Coordinates(21492,     0,  3375)),
+        DeviceCoordinates(0x6839, 1, Coordinates(    0,     0,  3120)),
+        DeviceCoordinates(0x683D, 1, Coordinates(-9677,    80,  3099)),
+    ]
     ################################
 
     # positioning algorithm to use, other is PozyxConstants.POSITIONING_ALGORITHM_TRACKING
@@ -225,5 +229,19 @@ if __name__ == "__main__":
     pozyx = PozyxSerial(serial_port)
     r = ReadyToLocalize(pozyx, osc_udp_client, anchors, algorithm, dimension, height, remote_id)
     r.setup()
-    while True:
-        r.loop()
+    
+    now = datetime.now()
+    dt_string = now.strftime("%m-%d-%Y_%H-%M-%S")
+    with open("./{}.log".format(dt_string), "a") as writer:
+        writer.write("=============" + sys.argv[-1] + "=============" + "\n")
+        while True:
+            pos, status = r.loop()
+            now_timestamp = str(datetime.now())
+            writer.write(now_timestamp + ";")
+            writer.write(str(pos))
+            writer.write(";")
+            writer.write(str(status))
+            writer.write("\n")
+
+
+
